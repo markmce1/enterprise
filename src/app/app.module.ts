@@ -11,14 +11,17 @@ import { MatButtonModule }from '@angular/material/button'
 import { MatToolbarModule }from '@angular/material/toolbar'
 import { HeaderComponent } from './header/header.component';
 import { StartListComponent } from './start-list/start-list.component';
-import { MatExpansionModule }from '@angular/material/expansion'; 
+import { MatExpansionModule }from '@angular/material/expansion';
+import { DataComponent } from './data/data.component'; 
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   declarations: [
     AppComponent,
     StartComponent,
     HeaderComponent,
-    StartListComponent
+    StartListComponent,
+    DataComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +32,8 @@ import { MatExpansionModule }from '@angular/material/expansion';
     MatCardModule,
     MatButtonModule,
     MatToolbarModule,
-    MatExpansionModule
+    MatExpansionModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
