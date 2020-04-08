@@ -22,5 +22,6 @@ export class DataComponent implements OnInit {
     console.log(this.posts);
     });
   }
+  
 
 }
