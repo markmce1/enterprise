@@ -1,6 +1,8 @@
-import { Component,  OnInit, Input } from '@angular/core'; 
+import { Component,  OnInit, OnDestroy } from '@angular/core'; 
 import { PostsService } from '../posts.service';
 import { Post } from '../start.model';
+
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -8,20 +10,23 @@ import { Post } from '../start.model';
   templateUrl: './data.component.html',
   styleUrls: ['./data.component.scss']
 })
-export class DataComponent implements OnInit {
+export class DataComponent implements OnInit, OnDestroy {
 
-  @Input() posts: Post [];
+
+  posts: Post[] = [];
+  private postsSub: Subscription;
   
-
   constructor(private postsService: PostsService) { }
-
-  ngOnInit(): void {
-    this.postsService.getPosts().subscribe( data => {
-      this.posts = data;
-      
-    console.log(this.posts);
-    });
+  ngOnInit() {
+    this.postsService.getPosts();
+    this.postsSub = this.postsService.getPostUpdateListener()
+      .subscribe((posts: Post[]) => {
+        this.posts = posts;
+      });
   }
-  
+
+  ngOnDestroy() {
+    this.postsSub.unsubscribe();
+  }
 
 }

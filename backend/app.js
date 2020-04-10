@@ -36,15 +36,17 @@ app.get('/api/posts',(req,res,next)=>{
          content: ' from server'
         },
         { 
-            id: 'sddasdasdafadsfdfgd',
-            title: 'Second SS post',
-            content: ' from server'
+         id: 'sddasdasdafadsfdfgd',
+         title: 'Second SS post',
+         content: ' from server'
         }
 
     ]; 
-    res.status(200).send(
-        posts,
-        );
+    console.log(posts);
+  res.status(200).json({
+    message: "Posts fetched successfully!",
+    posts: posts
+  });
 
 });
 

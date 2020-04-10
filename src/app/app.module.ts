@@ -10,7 +10,6 @@ import {MatCardModule} from '@angular/material/card';
 import { MatButtonModule }from '@angular/material/button'
 import { MatToolbarModule }from '@angular/material/toolbar'
 import { HeaderComponent } from './header/header.component';
-import { StartListComponent } from './start-list/start-list.component';
 import { MatExpansionModule }from '@angular/material/expansion';
 import { DataComponent } from './data/data.component'; 
 import {HttpClientModule} from '@angular/common/http';
@@ -20,7 +19,6 @@ import {HttpClientModule} from '@angular/common/http';
     AppComponent,
     StartComponent,
     HeaderComponent,
-    StartListComponent,
     DataComponent
   ],
   imports: [
