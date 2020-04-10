@@ -2,6 +2,8 @@ const express = require('express');
 const bodyparser  = require('body-parser');
 const app = express(); //exported later
 
+const Post = require('./models/post');
+
 app.use(bodyparser.json());
 //app.use(bodyparser.urlencoded({extended:false}));
 app.use((req,res,next)=> {
@@ -16,7 +18,10 @@ app.use((req,res,next)=> {
 });
 
 app.post("/api/posts", (req,res,next) => {
-    const post = req.body;
+    const post = new Post({
+        title: req.body.title,
+        content: req.body.content
+    });
     console.log(post);
     res.status(201).json({
         message: 'posts added successfully'
@@ -43,4 +48,4 @@ app.get('/api/posts',(req,res,next)=>{
 
 });
 
-module.exports = app; //this is what I mean
+module.exports = app; //this is what I mean by export later

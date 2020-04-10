@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'; 
+import { Component,  OnInit, Input } from '@angular/core'; 
 import { PostsService } from '../posts.service';
 import { Post } from '../start.model';
 
@@ -10,7 +10,7 @@ import { Post } from '../start.model';
 })
 export class DataComponent implements OnInit {
 
-  public posts: Post[];
+  @Input() posts: Post [];
   
 
   constructor(private postsService: PostsService) { }
