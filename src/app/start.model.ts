@@ -8,4 +8,5 @@ export interface Airbnb {
     id: string;
     name: string;
     summary: string;
+    //add location and description
 }

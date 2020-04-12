@@ -32,10 +32,13 @@ app.post("/api/posts", (req,res,next) => {
         name: req.body.name,
         summary: req.body.summary
     });
-    listing.save();
-    res.status(201).json({
-        message: 'listing added successfully'
+    listing.save().then(createdListing =>{
+        res.status(201).json({
+            message: 'listing added successfully',
+            listingId: createdListing._id
+        });
     });
+
 });
 
 app.get('/api/posts',(req,res,next)=>{
@@ -49,5 +52,13 @@ app.get('/api/posts',(req,res,next)=>{
 
 
 });
+
+app.delete("/api/posts/:id",(req,res,next)=>{
+    listingsAndReview.deleteOne({_id: req.params.id}).then(result =>{
+        console.log(result);
+        res.status(200).json({message:"post deleted"})
+    });
+});
+
 
 module.exports = app; //this is what I mean by export later

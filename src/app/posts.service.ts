@@ -8,7 +8,7 @@ import { Airbnb } from './start.model';
 @Injectable({providedIn: 'root'})
 export class PostsService {
   private listings: Airbnb[] = [];
-  private postsUpdated = new Subject<Airbnb[]>();
+  private listingsUpdated = new Subject<Airbnb[]>();
 
   constructor(private http: HttpClient) {}
 
@@ -25,25 +25,36 @@ export class PostsService {
             id: listingsAndReviews._id
           }
         });
-      })))
+      })))//here can be removed
       .subscribe(transformedPlaces => {
         this.listings = transformedPlaces;
-        this.postsUpdated.next([...this.listings]);
+        this.listingsUpdated.next([...this.listings]);
       });
   }
 
   getPostUpdateListener() {
-    return this.postsUpdated.asObservable();
+    return this.listingsUpdated.asObservable();
+  }
+
+  deleteListing(listingId: string){
+    this.http.delete("http://localhost:3000/api/posts/" + listingId)
+    .subscribe(()=>{
+      const updatedlistings = this.listings.filter(listing => listing.id !== listingId);
+      this.listings = updatedlistings;
+      this.listingsUpdated.next([...this.listings]);
+    });
   }
 
   addPost(name:string, summary:string){
     const listing: Airbnb = { id: null, name:name, summary: summary};
-    this.http.post<{message:string}>('http://localhost:3000/api/posts',listing)
+    this.http.post<{message:string, listingId}>('http://localhost:3000/api/posts',listing)
     .subscribe((responseData)=> {
-      console.log(responseData.message);
+      const newId = responseData.listingId;
+      listing.id = newId;
       this.listings.push(listing);
-      this.postsUpdated.next([...this.listings]);
+      this.listingsUpdated.next([...this.listings]);
     });
   }
+
 
 }
