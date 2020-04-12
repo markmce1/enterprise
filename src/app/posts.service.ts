@@ -1,23 +1,33 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import {map} from 'rxjs/operators';
 
-import { Post } from './start.model';
+import { Place } from './start.model';
 
 @Injectable({providedIn: 'root'})
 export class PostsService {
-  private posts: Post[] = [];
-  private postsUpdated = new Subject<Post[]>();
+  private posts: Place[] = [];
+  private postsUpdated = new Subject<Place[]>();
 
   constructor(private http: HttpClient) {}
 
   getPosts() {
     this.http
-      .get<{ message: string; posts: Post[] }>(
+      .get<{ message: string; posts: any }>(
         "http://localhost:3000/api/posts"
       )
-      .subscribe(postData => {
-        this.posts = postData.posts;
+      .pipe(map((placeData => {
+        return placeData.posts.map(places => {
+          return{
+            title: places.title,
+            content: places.content,
+            id: places._id
+          }
+        });
+      })))
+      .subscribe(transformedPlaces => {
+        this.posts = transformedPlaces;
         this.postsUpdated.next([...this.posts]);
       });
   }
@@ -27,7 +37,7 @@ export class PostsService {
   }
 
   addPost(title:string, content:string){
-    const post: Post = { id: null, title:title, content: content};
+    const post: Place = { id: null, title:title, content: content};
     this.http.post<{message:string}>('http://localhost:3000/api/posts',post)
     .subscribe((responseData)=> {
       console.log(responseData.message);
