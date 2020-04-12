@@ -5,7 +5,7 @@ export interface Place {
 }
 
 export interface Airbnb {
-    _id: string;
+    id: string;
     name: string;
     summary: string;
 }

@@ -37,7 +37,7 @@ export class PostsService {
   }
 
   addPost(name:string, summary:string){
-    const listing: Airbnb = { _id: null, name:name, summary: summary};
+    const listing: Airbnb = { id: null, name:name, summary: summary};
     this.http.post<{message:string}>('http://localhost:3000/api/posts',listing)
     .subscribe((responseData)=> {
       console.log(responseData.message);
