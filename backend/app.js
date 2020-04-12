@@ -2,7 +2,7 @@ const express = require('express');
 const bodyparser  = require('body-parser');
 const app = express(); //exported later
 const mongoose = require("mongoose");
-const listingsAndReview= require('./models/post');
+const listingsAndReview= require('./models/listings');
 
 
 //mongoose.connect("mongodb+srv://markmce:rMfZLJHQBCMCE0RT@enterpriseproject-ab1wl.mongodb.net/node-angular?retryWrites=true&w=majority")
@@ -27,7 +27,7 @@ app.use((req,res,next)=> {
     next();
 });
 
-app.post("/api/posts", (req,res,next) => {
+app.post("/api/listings", (req,res,next) => {
     const listing = new listingsAndReview({
         name: req.body.name,
         summary: req.body.summary,
@@ -44,7 +44,7 @@ app.post("/api/posts", (req,res,next) => {
 
 });
 
-app.get('/api/posts',(req,res,next)=>{
+app.get('/api/listings',(req,res,next)=>{
     listingsAndReview.find().then(documents => {
         res.status(200).json({
             message: "Listings fetched successfully!",
@@ -55,9 +55,9 @@ app.get('/api/posts',(req,res,next)=>{
 
 });
 
-app.delete("/api/posts/:id",(req,res,next)=>{
+app.delete("/api/listings/:id",(req,res,next)=>{
     listingsAndReview.deleteOne({_id: req.params.id}).then(result =>{
-        res.status(200).json({message:"post deleted"})
+        res.status(200).json({message:"Listing deleted"})
     });
 });
 

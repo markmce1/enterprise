@@ -1,5 +1,5 @@
 import { Component,  OnInit, OnDestroy } from '@angular/core'; 
-import { PostsService } from '../posts.service';
+import { ListingsService } from '../listings.service';
 import { Airbnb } from '../start.model';
 
 import { Subscription } from 'rxjs';
@@ -14,24 +14,24 @@ export class DataComponent implements OnInit, OnDestroy {
 
 
   listings: Airbnb[] = [];
-  private postsSub: Subscription;
+  private listingsSub: Subscription;
   
-  constructor(private postsService: PostsService) { }
+  constructor(private listingsService: ListingsService) { }
   ngOnInit() {
-    this.postsService.getListings();
-    this.postsSub = this.postsService.getListingUpdateListener()
-      .subscribe((posts: Airbnb[]) => {
-        this.listings = posts;
+    this.listingsService.getListings();
+    this.listingsSub = this.listingsService.getListingUpdateListener()
+      .subscribe((listings: Airbnb[]) => {
+        this.listings = listings;
       });
   }
 
   onDelete(listingId: string)
   {
-    this.postsService.deleteListing(listingId);
+    this.listingsService.deleteListing(listingId);
   }
 
   ngOnDestroy() {
-    this.postsSub.unsubscribe();
+    this.listingsSub.unsubscribe();
   }
 
 }

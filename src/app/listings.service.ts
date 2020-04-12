@@ -6,16 +6,16 @@ import {map} from 'rxjs/operators';
 import { Airbnb } from './start.model';
 
 @Injectable({providedIn: 'root'})
-export class PostsService {
+export class ListingsService {
   private listings: Airbnb[] = [];
   private listingsUpdated = new Subject<Airbnb[]>();
 
   constructor(private http: HttpClient) {}
 
-  getListings() {//gets the listings from the backend, ala the api/posts part there
+  getListings() {//gets the listings from the backend, ala the api/listings part there
     this.http
       .get<{ message: string; listing: any }>(
-        "http://localhost:3000/api/posts"
+        "http://localhost:3000/api/listings"
       )
       .pipe(map((placeData => {
         return placeData.listing.map(listingsAndReviews => {//makes all them listings equal to whats in the start.model.ts file, the airbnb model
@@ -38,8 +38,8 @@ export class PostsService {
     return this.listingsUpdated.asObservable();
   }
 
-  deleteListing(listingId: string){//grabs the id of what is deleting and passes it to the back end with the http.delete method and subscribes. Refreshes the listing to remove any posts that arent in the db
-    this.http.delete("http://localhost:3000/api/posts/" + listingId)
+  deleteListing(listingId: string){//grabs the id of what is deleting and passes it to the back end with the http.delete method and subscribes. Refreshes the listing to remove any listings that arent in the db
+    this.http.delete("http://localhost:3000/api/listings/" + listingId)
     .subscribe(()=>{
       const updatedlistings = this.listings.filter(listing => listing.id !== listingId);
       this.listings = updatedlistings;
@@ -49,8 +49,8 @@ export class PostsService {
 
   addListing(name:string, summary:string, location:string, description:string){
     const listing: Airbnb = { id: null, name: name, summary: summary, location: location, description:description};
-    this.http.post<{message:string, listingId}>('http://localhost:3000/api/posts',listing)
-    .subscribe((responseData)=> {//adds the new ID of a newly added post back to it, allows for deletion of new posts
+    this.http.post<{message:string, listingId}>('http://localhost:3000/api/listings',listing)
+    .subscribe((responseData)=> {//adds the new ID of a newly added listing back to it, allows for deletion of new listings
       const newId = responseData.listingId;
       listing.id = newId;
       this.listings.push(listing);
