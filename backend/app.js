@@ -2,10 +2,11 @@ const express = require('express');
 const bodyparser  = require('body-parser');
 const app = express(); //exported later
 const mongoose = require("mongoose");
-const Place = require('./models/post');
+const listingsAndReview= require('./models/post');
 
 
-mongoose.connect("mongodb+srv://markmce:rMfZLJHQBCMCE0RT@enterpriseproject-ab1wl.mongodb.net/node-angular?retryWrites=true&w=majority")
+//mongoose.connect("mongodb+srv://markmce:rMfZLJHQBCMCE0RT@enterpriseproject-ab1wl.mongodb.net/node-angular?retryWrites=true&w=majority")
+mongoose.connect("mongodb+srv://markmce:rMfZLJHQBCMCE0RT@enterpriseproject-ab1wl.mongodb.net/sample_airbnb?retryWrites=true&w=majority")
     .then(() =>
     {
         console.log('Connected')
@@ -27,21 +28,22 @@ app.use((req,res,next)=> {
 });
 
 app.post("/api/posts", (req,res,next) => {
-    const post = new Place({
-        title: req.body.title,
-        content: req.body.content
+    const listing = new listingsAndReview({
+        name: req.body.name,
+        summary: req.body.summary
     });
-    post.save();
+    listing.save();
     res.status(201).json({
-        message: 'posts added successfully'
+        message: 'listing added successfully'
     });
 });
 
 app.get('/api/posts',(req,res,next)=>{
-    Place.find().then(documents => {
+    listingsAndReview.find().then(documents => {
+        console.log(documents)
         res.status(200).json({
-            message: "Posts fetched successfully!",
-            posts: documents
+            message: "Listings fetched successfully!",
+            listing: documents
           });
     });
 

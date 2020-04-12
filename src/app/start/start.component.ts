@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { Place } from '../start.model';
+import { Place, Airbnb } from '../start.model';
 import { NgForm } from '@angular/forms';
 import { PostsService } from '../posts.service';
 @Component({
@@ -9,16 +9,16 @@ import { PostsService } from '../posts.service';
 
 })
 export class StartComponent {
-    enteredTitle = "";
-    enteredContent = "";
-    @Output() postCreated = new EventEmitter<Place>();
+    enteredName = "";
+    enteredSummary = "";
+    @Output() postCreated = new EventEmitter<Airbnb>();
 
     constructor(public postsService: PostsService) { }
   onAddPost(form: NgForm) {
     if (form.invalid) {
       return;
     }
-    this.postsService.addPost(form.value.title, form.value.content);
+    this.postsService.addPost(form.value.name, form.value.summary);
     form.resetForm();
   }
 

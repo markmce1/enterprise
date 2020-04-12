@@ -7,28 +7,28 @@ import { Place } from './start.model';
 
 @Injectable({providedIn: 'root'})
 export class PostsService {
-  private posts: Place[] = [];
+  private listings: Place[] = [];
   private postsUpdated = new Subject<Place[]>();
 
   constructor(private http: HttpClient) {}
 
   getPosts() {
     this.http
-      .get<{ message: string; posts: any }>(
+      .get<{ message: string; listing: any }>(
         "http://localhost:3000/api/posts"
       )
       .pipe(map((placeData => {
-        return placeData.posts.map(places => {
+        return placeData.listing.map(listingsAndReviews => {
           return{
-            title: places.title,
-            content: places.content,
-            id: places._id
+            name: listingsAndReviews.name,
+            summary: listingsAndReviews.summary,
+            id: listingsAndReviews._id
           }
         });
       })))
       .subscribe(transformedPlaces => {
-        this.posts = transformedPlaces;
-        this.postsUpdated.next([...this.posts]);
+        this.listings = transformedPlaces;
+        this.postsUpdated.next([...this.listings]);
       });
   }
 
@@ -37,12 +37,12 @@ export class PostsService {
   }
 
   addPost(title:string, content:string){
-    const post: Place = { id: null, title:title, content: content};
-    this.http.post<{message:string}>('http://localhost:3000/api/posts',post)
+    const listing: Place = { id: null, title:title, content: content};
+    this.http.post<{message:string}>('http://localhost:3000/api/posts',listing)
     .subscribe((responseData)=> {
       console.log(responseData.message);
-      this.posts.push(post);
-      this.postsUpdated.next([...this.posts]);
+      this.listings.push(listing);
+      this.postsUpdated.next([...this.listings]);
     });
   }
 

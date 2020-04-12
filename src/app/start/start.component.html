@@ -4,24 +4,24 @@
         <input
           matInput
           type="text"
-          name="title"
+          name="name"
           ngModel
           required
           minlength="3"
-          placeholder="Post Title"
-          #title="ngModel">
-        <mat-error *ngIf="title.invalid">Please enter a post title.</mat-error>
+          placeholder="Listing name"
+          #name="ngModel">
+        <mat-error *ngIf="name.invalid">Please enter a listing name.</mat-error>
       </mat-form-field>
       <mat-form-field>
         <textarea
           matInput
           rows="4"
-          name="content"
+          name="summary"
           ngModel
           required
-          placeholder="Post Content"
-          #content="ngModel"></textarea>
-        <mat-error *ngIf="content.invalid">Please enter a post title.</mat-error>
+          placeholder="Listing content"
+          #summary="ngModel"></textarea>
+        <mat-error *ngIf="summary.invalid">Please enter a listing summary.</mat-error>
       </mat-form-field>
       <button
         mat-raised-button

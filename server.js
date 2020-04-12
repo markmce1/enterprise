@@ -1,5 +1,5 @@
 const app = require("./backend/app");
-const debug = require("debug")("node-angular");
+const debug = require("debug")("sample_airbnb");
 const http = require("http");
 
 const normalizePort = val => {
