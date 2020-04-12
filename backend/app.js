@@ -30,7 +30,10 @@ app.use((req,res,next)=> {
 app.post("/api/posts", (req,res,next) => {
     const listing = new listingsAndReview({
         name: req.body.name,
-        summary: req.body.summary
+        summary: req.body.summary,
+        location: req.body.location,
+        description: req.body.description
+
     });
     listing.save().then(createdListing =>{
         res.status(201).json({
@@ -43,7 +46,6 @@ app.post("/api/posts", (req,res,next) => {
 
 app.get('/api/posts',(req,res,next)=>{
     listingsAndReview.find().then(documents => {
-        console.log(documents)
         res.status(200).json({
             message: "Listings fetched successfully!",
             listing: documents
@@ -55,7 +57,6 @@ app.get('/api/posts',(req,res,next)=>{
 
 app.delete("/api/posts/:id",(req,res,next)=>{
     listingsAndReview.deleteOne({_id: req.params.id}).then(result =>{
-        console.log(result);
         res.status(200).json({message:"post deleted"})
     });
 });

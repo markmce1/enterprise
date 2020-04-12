@@ -15,13 +15,35 @@
       <mat-form-field>
         <textarea
           matInput
-          rows="4"
+          rows="2"
           name="summary"
           ngModel
           required
           placeholder="Listing content"
           #summary="ngModel"></textarea>
         <mat-error *ngIf="summary.invalid">Please enter a listing summary.</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <textarea
+          matInput
+          rows="2"
+          name="location"
+          ngModel
+          required
+          placeholder="Location Content"
+          #location="ngModel"></textarea>
+        <mat-error *ngIf="location.invalid">Please enter a listing's location.</mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <textarea
+          matInput
+          rows="4"
+          name="description"
+          ngModel
+          required
+          placeholder="Listing description"
+          #description="ngModel"></textarea>
+        <mat-error *ngIf="description.invalid">Please enter a listing's description.</mat-error>
       </mat-form-field>
       <button
         mat-raised-button

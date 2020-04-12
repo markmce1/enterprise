@@ -12,16 +12,18 @@ export class PostsService {
 
   constructor(private http: HttpClient) {}
 
-  getPosts() {
+  getListings() {//gets the listings from the backend, ala the api/posts part there
     this.http
       .get<{ message: string; listing: any }>(
         "http://localhost:3000/api/posts"
       )
       .pipe(map((placeData => {
-        return placeData.listing.map(listingsAndReviews => {
+        return placeData.listing.map(listingsAndReviews => {//makes all them listings equal to whats in the start.model.ts file, the airbnb model
           return{
             name: listingsAndReviews.name,
             summary: listingsAndReviews.summary,
+            location: listingsAndReviews.location,
+            description : listingsAndReviews.description,
             id: listingsAndReviews._id
           }
         });
@@ -32,11 +34,11 @@ export class PostsService {
       });
   }
 
-  getPostUpdateListener() {
+  getListingUpdateListener() {//updates after adding and deleting so that theres real time adding and deleting
     return this.listingsUpdated.asObservable();
   }
 
-  deleteListing(listingId: string){
+  deleteListing(listingId: string){//grabs the id of what is deleting and passes it to the back end with the http.delete method and subscribes. Refreshes the listing to remove any posts that arent in the db
     this.http.delete("http://localhost:3000/api/posts/" + listingId)
     .subscribe(()=>{
       const updatedlistings = this.listings.filter(listing => listing.id !== listingId);
@@ -45,10 +47,10 @@ export class PostsService {
     });
   }
 
-  addPost(name:string, summary:string){
-    const listing: Airbnb = { id: null, name:name, summary: summary};
+  addListing(name:string, summary:string, location:string, description:string){
+    const listing: Airbnb = { id: null, name: name, summary: summary, location: location, description:description};
     this.http.post<{message:string, listingId}>('http://localhost:3000/api/posts',listing)
-    .subscribe((responseData)=> {
+    .subscribe((responseData)=> {//adds the new ID of a newly added post back to it, allows for deletion of new posts
       const newId = responseData.listingId;
       listing.id = newId;
       this.listings.push(listing);

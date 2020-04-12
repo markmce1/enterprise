@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { Place, Airbnb } from '../start.model';
+import { Airbnb } from '../start.model';
 import { NgForm } from '@angular/forms';
 import { PostsService } from '../posts.service';
 @Component({
@@ -18,7 +18,7 @@ export class StartComponent {
     if (form.invalid) {
       return;
     }
-    this.postsService.addPost(form.value.name, form.value.summary);
+    this.postsService.addListing(form.value.name, form.value.summary, form.value.location, form.value.description);
     form.resetForm();
   }
 

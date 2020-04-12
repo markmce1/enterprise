@@ -18,8 +18,8 @@ export class DataComponent implements OnInit, OnDestroy {
   
   constructor(private postsService: PostsService) { }
   ngOnInit() {
-    this.postsService.getPosts();
-    this.postsSub = this.postsService.getPostUpdateListener()
+    this.postsService.getListings();
+    this.postsSub = this.postsService.getListingUpdateListener()
       .subscribe((posts: Airbnb[]) => {
         this.listings = posts;
       });
