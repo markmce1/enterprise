@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import {map} from 'rxjs/operators';
 
-import { Place } from './start.model';
+import { Airbnb } from './start.model';
 
 @Injectable({providedIn: 'root'})
 export class PostsService {
-  private listings: Place[] = [];
-  private postsUpdated = new Subject<Place[]>();
+  private listings: Airbnb[] = [];
+  private postsUpdated = new Subject<Airbnb[]>();
 
   constructor(private http: HttpClient) {}
 
@@ -36,8 +36,8 @@ export class PostsService {
     return this.postsUpdated.asObservable();
   }
 
-  addPost(title:string, content:string){
-    const listing: Place = { id: null, title:title, content: content};
+  addPost(name:string, summary:string){
+    const listing: Airbnb = { _id: null, name:name, summary: summary};
     this.http.post<{message:string}>('http://localhost:3000/api/posts',listing)
     .subscribe((responseData)=> {
       console.log(responseData.message);

@@ -6,8 +6,6 @@ export interface Place {
 
 export interface Airbnb {
     _id: string;
-    listing_url: string;
     name: string;
     summary: string;
-    property_type: string;
 }
