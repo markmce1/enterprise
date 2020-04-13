@@ -27,7 +27,7 @@ export class ListingsService {
             id: listingsAndReviews._id
           }
         });
-      })))//here can be removed
+      })))
       .subscribe(transformedPlaces => {
         this.listings = transformedPlaces;
         this.listingsUpdated.next([...this.listings]);
@@ -36,6 +36,16 @@ export class ListingsService {
 
   getListingUpdateListener() {//updates after adding and deleting so that theres real time adding and deleting
     return this.listingsUpdated.asObservable();
+  }
+
+  getListing(id: string){
+    return{...this.listings.find(l => l.id === id)};
+  }
+
+  updateListing(id:string, name:string, summary:string, location:string, description:string){
+    const listing: Airbnb=  { id: id, name: name, summary: summary, location: location, description:description};
+    this.http.put("http://localhost:3000/api/listings/"+ id,listing)
+    .subscribe(response => console.log(response));
   }
 
   deleteListing(listingId: string){//grabs the id of what is deleting and passes it to the back end with the http.delete method and subscribes. Refreshes the listing to remove any listings that arent in the db

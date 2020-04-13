@@ -23,7 +23,7 @@ app.use((req,res,next)=> {
      'Origin, X-Request-With, Content-Type, Accept');
      res.setHeader(
      'Access-Control-Allow-Methods', 
-     'GET, POST, PATCH, DELETE, OPTIONS');
+     'GET, POST, PATCH, PUT, DELETE, OPTIONS');
     next();
 });
 
@@ -42,6 +42,21 @@ app.post("/api/listings", (req,res,next) => {
         });
     });
 
+});
+
+app.put("/api/listings/:id",(req,res,next) =>{
+    const listing = new listingsAndReview({
+        _id:req.body.id,
+        name: req.body.name,
+        summary: req.body.summary,
+        location: req.body.location,
+        description: req.body.description
+
+    });
+    listingsAndReview.updateOne({_id:req.params.id},listing).then(result => {
+        console.log(result);
+        res.status(200).json({message:'Update successful'})
+    })
 });
 
 app.get('/api/listings',(req,res,next)=>{
