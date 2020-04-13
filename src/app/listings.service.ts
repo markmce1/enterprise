@@ -39,13 +39,23 @@ export class ListingsService {
   }
 
   getListing(id: string){
-    return{...this.listings.find(l => l.id === id)};
+    //return{...this.listings.find(l => l.id === id)};
+    return this.http.get<{ _id: string; name:string; summary:string; location:string; description:string }>
+    (
+      "https://localhost:3000/api/listings/"+ id
+    );
   }
 
   updateListing(id:string, name:string, summary:string, location:string, description:string){
     const listing: Airbnb=  { id: id, name: name, summary: summary, location: location, description:description};
     this.http.put("http://localhost:3000/api/listings/"+ id,listing)
-    .subscribe(response => console.log(response));
+    .subscribe(response => {
+      const updatedListings = [...this.listings];
+      const oldListingIndex = updatedListings.findIndex(l => l.id === listing.id);
+      updatedListings[oldListingIndex] = listing;
+      this.listings = updatedListings;
+      this.listingsUpdated.next([...this.listings]);
+    });
   }
 
   deleteListing(listingId: string){//grabs the id of what is deleting and passes it to the back end with the http.delete method and subscribes. Refreshes the listing to remove any listings that arent in the db
@@ -65,6 +75,7 @@ export class ListingsService {
       listing.id = newId;
       this.listings.push(listing);
       this.listingsUpdated.next([...this.listings]);
+
     });
   }
 

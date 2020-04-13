@@ -2,12 +2,12 @@ const express = require('express');
 const bodyparser  = require('body-parser');
 const app = express(); //exported later
 const mongoose = require("mongoose");
-const listingsAndReview= require('./models/listings');
+
+const listingRoutes = require("./routes/listings");
 
 
-//mongoose.connect("mongodb+srv://markmce:rMfZLJHQBCMCE0RT@enterpriseproject-ab1wl.mongodb.net/node-angular?retryWrites=true&w=majority")
 mongoose.connect("mongodb+srv://markmce:rMfZLJHQBCMCE0RT@enterpriseproject-ab1wl.mongodb.net/sample_airbnb?retryWrites=true&w=majority")
-    .then(() =>
+    .then(() => 
     {
         console.log('Connected')
     })
@@ -27,54 +27,6 @@ app.use((req,res,next)=> {
     next();
 });
 
-app.post("/api/listings", (req,res,next) => {
-    const listing = new listingsAndReview({
-        name: req.body.name,
-        summary: req.body.summary,
-        location: req.body.location,
-        description: req.body.description
+app.use("/api/listings", listingRoutes);
 
-    });
-    listing.save().then(createdListing =>{
-        res.status(201).json({
-            message: 'listing added successfully',
-            listingId: createdListing._id
-        });
-    });
-
-});
-
-app.put("/api/listings/:id",(req,res,next) =>{
-    const listing = new listingsAndReview({
-        _id:req.body.id,
-        name: req.body.name,
-        summary: req.body.summary,
-        location: req.body.location,
-        description: req.body.description
-
-    });
-    listingsAndReview.updateOne({_id:req.params.id},listing).then(result => {
-        console.log(result);
-        res.status(200).json({message:'Update successful'})
-    })
-});
-
-app.get('/api/listings',(req,res,next)=>{
-    listingsAndReview.find().then(documents => {
-        res.status(200).json({
-            message: "Listings fetched successfully!",
-            listing: documents
-          });
-    });
-
-
-});
-
-app.delete("/api/listings/:id",(req,res,next)=>{
-    listingsAndReview.deleteOne({_id: req.params.id}).then(result =>{
-        res.status(200).json({message:"Listing deleted"})
-    });
-});
-
-
-module.exports = app; //this is what I mean by export later
+module.exports = app;

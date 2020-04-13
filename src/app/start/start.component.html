@@ -1,11 +1,11 @@
 <mat-card>
-    <form (submit)="onSaveListing(postForm)" #postForm="ngForm">
+    <form (submit)="onSaveListing(listingForm)" #listingForm="ngForm">
       <mat-form-field>
         <input
           matInput
           type="text"
           name="name"
-          [ngModel]="listing.name"
+          [ngModel]="listing?.name"
           required
           minlength="3"
           placeholder="Listing name"
@@ -17,7 +17,7 @@
           matInput
           rows="2"
           name="summary"
-          [ngModel]="listing.summary"
+          [ngModel]="listing?.summary"
           required
           placeholder="Listing content"
           #summary="ngModel"></textarea>
@@ -28,7 +28,7 @@
           matInput
           rows="2"
           name="location"
-          [ngModel]="listing.location"
+          [ngModel]="listing?.location"
           required
           placeholder="Location Content"
           #location="ngModel"></textarea>
@@ -39,7 +39,7 @@
           matInput
           rows="4"
           name="description"
-          [ngModel]="listing.description"
+          [ngModel]="listing?.description"
           required
           placeholder="Listing description"
           #description="ngModel"></textarea>

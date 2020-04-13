@@ -24,10 +24,11 @@ export class StartComponent implements OnInit {
       if(paramMap.has("listingId")){
         this.mode = "edit";
         this.listingId = paramMap.get("listingId");
-        this.listing = this.listingsService.getListing(this.listingId);
-        console.log(paramMap);
+        this.listingsService.getListing(this.listingId).subscribe(listingData =>{
+          this.listing = {id:listingData._id, name: listingData.name,summary: listingData.summary,location: listingData.location,description: listingData.description}
+        });
       }else{
-        this.mode = "create";
+        this.mode = "add";
         this.listingId = null;
       }
     });
