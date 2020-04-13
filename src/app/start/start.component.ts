@@ -14,6 +14,7 @@ export class StartComponent implements OnInit {
     enteredSummary = "";
     private mode = "add";
     private listingId: string;
+    isloading = false;
     listing: Airbnb;
     @Output() listingCreated = new EventEmitter<Airbnb>();
 
@@ -24,7 +25,9 @@ export class StartComponent implements OnInit {
       if(paramMap.has("listingId")){
         this.mode = "edit";
         this.listingId = paramMap.get("listingId");
+        this.isloading = true;
         this.listingsService.getListing(this.listingId).subscribe(listingData =>{
+        this.isloading = false;
           this.listing = {id:listingData._id, name: listingData.name,summary: listingData.summary,location: listingData.location,description: listingData.description}
         });
       }else{
@@ -38,6 +41,7 @@ export class StartComponent implements OnInit {
     if (form.invalid) {
       return;
     }
+    this.isloading = true;
     if(this.mode === 'add'){
       this.listingsService.addListing(form.value.name, form.value.summary, form.value.location, form.value.description);
     }else{

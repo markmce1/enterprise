@@ -15,12 +15,15 @@ export class DataComponent implements OnInit, OnDestroy {
 
   listings: Airbnb[] = [];
   private listingsSub: Subscription;
+  isloading = false;
   
   constructor(private listingsService: ListingsService) { }
   ngOnInit() {
+    this.isloading = true;
     this.listingsService.getListings();
     this.listingsSub = this.listingsService.getListingUpdateListener()
       .subscribe((listings: Airbnb[]) => {
+        this.isloading= false;
         this.listings = listings;
       });
   }

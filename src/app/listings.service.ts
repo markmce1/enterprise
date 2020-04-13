@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import {map} from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 import { Airbnb } from './start.model';
 
@@ -10,7 +11,7 @@ export class ListingsService {
   private listings: Airbnb[] = [];
   private listingsUpdated = new Subject<Airbnb[]>();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router:Router) {}
 
   getListings() {//gets the listings from the backend, ala the api/listings part there
     this.http
@@ -42,7 +43,7 @@ export class ListingsService {
     //return{...this.listings.find(l => l.id === id)};
     return this.http.get<{ _id: string; name:string; summary:string; location:string; description:string }>
     (
-      "https://localhost:3000/api/listings/"+ id
+      "http://localhost:3000/api/listings/"+ id
     );
   }
 
@@ -55,6 +56,7 @@ export class ListingsService {
       updatedListings[oldListingIndex] = listing;
       this.listings = updatedListings;
       this.listingsUpdated.next([...this.listings]);
+      this.router.navigate(['/']);
     });
   }
 
@@ -75,6 +77,7 @@ export class ListingsService {
       listing.id = newId;
       this.listings.push(listing);
       this.listingsUpdated.next([...this.listings]);
+      this.router.navigate(['/']);
 
     });
   }
