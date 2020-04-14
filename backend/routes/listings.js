@@ -1,30 +1,69 @@
 const express = require("express");
+const multer = require("multer");
 const routing = express.Router();
 const listingsAndReview= require('../models/listings');
 
-routing.post("", (req,res,next) => {
+const  MIME_TYPE_MAP = {
+    'image/png': 'png',
+    'image/jpeg': 'jpg',
+    'image/jpg': 'jpg'
+};
+
+const storage = multer.diskStorage({
+    destination: (req,file,cb)=>{
+        const isValid = MIME_TYPE_MAP[file.mimetype];
+        let error = new Error('Invalid mime type');
+        if(isValid){
+            error = null;
+        }
+        cb(error,"backend/images");//pathing from the server.js file
+    },
+    filename:(req,file,cb)=>{
+        const fname =file.originalname.toLowerCase().split(' ').join('-');
+        const ext = MIME_TYPE_MAP[file.mimetype];
+        cb(null,fname + '-' + Date.now()+ '.'+ext );
+    }
+});
+
+routing.post("",multer({storage:storage}).single("image"), (req,res,next) => {
+    const url = req.protocol + '://' + req.get("host");
     const listing = new listingsAndReview({
         name: req.body.name,
         summary: req.body.summary,
         location: req.body.location,
-        description: req.body.description
+        description: req.body.description,
+        imagePath: url + "/images/" + req.file.filename
     });
     listing.save().then(createdListing =>{
         res.status(201).json({
             message: 'listing added successfully',
-            listingId: createdListing._id
+            listing:{
+                id:createdListing._id,
+                name:createdListing.name,
+                summary:createdListing.summary,
+                location:createdListing.location,
+                description:createdListing.description,
+                imagePath:createdListing.imagePath
+            }
         });
     });
 
 });
 
-routing.put("/:id",(req,res,next) =>{
+routing.put("/:id",multer({storage:storage}).single("image"),(req,res,next) =>{
+    let imagePath = req.body.imagePath;
+    if(req.file){
+        const url = req.protocol + '://' + req.get("host");
+        imagePath = url + "/images/" + req.file.filename;
+
+     }
     const listing = new listingsAndReview({
         _id: req.body.id,
         name: req.body.name,
         summary: req.body.summary,
         location: req.body.location,
-        description: req.body.description
+        description: req.body.description,
+        imagePath:imagePath
 
     });
     listingsAndReview.updateOne({ _id: req.params.id}, listing).then(result => {

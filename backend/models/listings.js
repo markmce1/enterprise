@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 
 const listingSchema = mongoose.Schema({
-    location: {type: String},
-    name: {type: String},
-    summary: {type: String},
-    description: {type:String}
+    location: {type: String, required: true},
+    name: {type: String,required: true},
+    summary: {type: String,required: true},
+    description: {type:String,required: true},
+    imagePath:{type:String,required: true}
 });
 
 module.exports = mongoose.model('listingsAndReview',listingSchema);

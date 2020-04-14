@@ -1,51 +1,46 @@
 <mat-card>
   <mat-spinner *ngIf="isloading"></mat-spinner>
-    <form (submit)="onSaveListing(listingForm)" #listingForm="ngForm" *ngIf="!isloading">
+    <form [formGroup]="form" (submit)="onSaveListing()" *ngIf="!isloading">
       <mat-form-field>
         <input
           matInput
           type="text"
-          name="name"
-          [ngModel]="listing?.name"
-          required
-          minlength="3"
-          placeholder="Listing name"
-          #name="ngModel">
-        <mat-error *ngIf="name.invalid">Please enter a listing name.</mat-error>
+          formControlName="name"
+          placeholder="Listing name">
+        <mat-error *ngIf="form.get('name').invalid">Please enter a listing name.</mat-error>
+      </mat-form-field>
+      <div>
+        <button mat-stroked-button type="button"(click)="filePicker.click() ">Image of property</button>
+        <input type = "file" #filePicker (change)="onImagePicked($event)">
+      </div>
+      <div class="image-preview" *ngIf= "imagePreview!== '' && imagePreview && form.get('image').valid">
+        <img [src]="imagePreview" [alt]="form.value.name">
+      </div>
+      <mat-form-field>
+        <textarea
+          matInput
+          rows="2"
+          formControlName="summary"
+          placeholder="Listing content"></textarea>
+        <mat-error *ngIf="form.get('summary').invalid">Please enter a listing summary.</mat-error>
       </mat-form-field>
       <mat-form-field>
         <textarea
           matInput
           rows="2"
-          name="summary"
-          [ngModel]="listing?.summary"
-          required
-          placeholder="Listing content"
-          #summary="ngModel"></textarea>
-        <mat-error *ngIf="summary.invalid">Please enter a listing summary.</mat-error>
-      </mat-form-field>
-      <mat-form-field>
-        <textarea
-          matInput
-          rows="2"
-          name="location"
-          [ngModel]="listing?.location"
-          required
-          placeholder="Location Content"
-          #location="ngModel"></textarea>
-        <mat-error *ngIf="location.invalid">Please enter a listing's location.</mat-error>
+          formControlName="location"
+          placeholder="Listing location"></textarea>
+        <mat-error *ngIf="form.get('location').invalid">Please enter a listing's location.</mat-error>
       </mat-form-field>
       <mat-form-field>
         <textarea
           matInput
           rows="4"
-          name="description"
-          [ngModel]="listing?.description"
-          required
-          placeholder="Listing description"
-          #description="ngModel"></textarea>
-        <mat-error *ngIf="description.invalid">Please enter a listing's description.</mat-error>
+          formControlName="description"
+          placeholder="Listing description"></textarea>
+        <mat-error *ngIf="form.get('description').invalid">Please enter a listing's description.</mat-error>
       </mat-form-field>
+
       <button
         mat-raised-button
         color="accent"

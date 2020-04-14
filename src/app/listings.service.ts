@@ -25,7 +25,8 @@ export class ListingsService {
             summary: listingsAndReviews.summary,
             location: listingsAndReviews.location,
             description : listingsAndReviews.description,
-            id: listingsAndReviews._id
+            id: listingsAndReviews._id,
+            imagePath:listingsAndReviews.imagePath
           }
         });
       })))
@@ -40,19 +41,46 @@ export class ListingsService {
   }
 
   getListing(id: string){
-    //return{...this.listings.find(l => l.id === id)};
-    return this.http.get<{ _id: string; name:string; summary:string; location:string; description:string }>
+    return this.http.get<{ _id: string, name:string, summary: string, location: string, description: string, imagePath: string }>
     (
       "http://localhost:3000/api/listings/"+ id
     );
   }
 
-  updateListing(id:string, name:string, summary:string, location:string, description:string){
-    const listing: Airbnb=  { id: id, name: name, summary: summary, location: location, description:description};
-    this.http.put("http://localhost:3000/api/listings/"+ id,listing)
+  updateListing(id:string, name:string, summary:string, location:string, description:string, image: File  | string){
+    let listingData:Airbnb | FormData;
+    if(typeof image === 'object')
+    {
+      listingData = new FormData();
+      listingData.append("id",id);
+      listingData.append("name",name);
+      listingData.append("summary", summary);
+      listingData.append("location",location);
+      listingData.append("description",description);
+      listingData.append("image",image,name);
+    }else{
+      listingData = { 
+        id:id,
+        name:name,
+        summary:summary,
+        location:location,
+        description:description,
+        imagePath:image
+      } 
+    };
+    this.http.put("http://localhost:3000/api/listings/"+ id,listingData)
     .subscribe(response => {
       const updatedListings = [...this.listings];
-      const oldListingIndex = updatedListings.findIndex(l => l.id === listing.id);
+      const oldListingIndex = updatedListings.findIndex(l => l.id === id);
+      const listing: Airbnb= {
+        id:id,
+        name:name,
+        summary:summary,
+        location:location,
+        description:description,
+        imagePath:""
+
+      }
       updatedListings[oldListingIndex] = listing;
       this.listings = updatedListings;
       this.listingsUpdated.next([...this.listings]);
@@ -69,12 +97,27 @@ export class ListingsService {
     });
   }
 
-  addListing(name:string, summary:string, location:string, description:string){
-    const listing: Airbnb = { id: null, name: name, summary: summary, location: location, description:description};
-    this.http.post<{message:string, listingId}>('http://localhost:3000/api/listings',listing)
-    .subscribe((responseData)=> {//adds the new ID of a newly added listing back to it, allows for deletion of new listings
-      const newId = responseData.listingId;
-      listing.id = newId;
+  addListing(name:string, summary:string, location:string, description:string, image:File){
+    const listingData = new FormData();
+    listingData.append("name",name);
+    listingData.append("summary",summary);
+    listingData.append("location",location);
+    listingData.append("description",description);
+    listingData.append("image",image, name);
+    this.http
+    .post<{message:string, listing:Airbnb}>(
+      'http://localhost:3000/api/listings',listingData
+      )
+    .subscribe((responseData)=> {
+      //adds the new ID of a newly added listing back to it, allows for deletion of new listings
+      const listing: Airbnb = {
+        id:responseData.listing.id, 
+        name: name, 
+        summary: summary, 
+        location: location, 
+        description:description,
+        imagePath: responseData.listing.imagePath
+      };
       this.listings.push(listing);
       this.listingsUpdated.next([...this.listings]);
       this.router.navigate(['/']);
