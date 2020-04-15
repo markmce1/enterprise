@@ -72,10 +72,24 @@ routing.put("/:id",multer({storage:storage}).single("image"),(req,res,next) =>{
 });
 
 routing.get('',(req,res,next)=>{
-    listingsAndReview.find().then(documents => {
+    const pageSize = +req.query.pagesize;
+    const currentPage = +req.query.page;
+    const listingQuery = listingsAndReview.find();
+    let fetchedListings;
+    if(pageSize && currentPage){
+        listingQuery
+        .skip(pageSize * (currentPage-1))
+        .limit(pageSize);
+    }
+    listingQuery.then(documents => {
+        fetchedListings = documents;
+        return listingsAndReview.count();
+    })
+    .then(count => {
         res.status(200).json({
             message: "Listings fetched successfully!",
-            listing: documents
+            listing: fetchedListings,
+            maxListings: count
           });
     });
 

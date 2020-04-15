@@ -9,17 +9,18 @@ import { Airbnb } from './start.model';
 @Injectable({providedIn: 'root'})
 export class ListingsService {
   private listings: Airbnb[] = [];
-  private listingsUpdated = new Subject<Airbnb[]>();
+  private listingsUpdated = new Subject<{listings: Airbnb[], listingCount:number}>();
 
   constructor(private http: HttpClient, private router:Router) {}
 
-  getListings() {//gets the listings from the backend, ala the api/listings part there
+  getListings(listingsPerPage: number, currentPage: number) {//gets the listings from the backend, ala the api/listings part there
+    const queryParms= `?pagesize=${listingsPerPage}&page=${currentPage}`;
     this.http
-      .get<{ message: string; listing: any }>(
-        "http://localhost:3000/api/listings"
+      .get<{ message: string; listing: any, maxListings:number}>(
+        "http://localhost:3000/api/listings" + queryParms
       )
       .pipe(map((placeData => {
-        return placeData.listing.map(listingsAndReviews => {//makes all them listings equal to whats in the start.model.ts file, the airbnb model
+        return { listings: placeData.listing.map(listingsAndReviews => {//makes all them listings equal to whats in the start.model.ts file, the airbnb model
           return{
             name: listingsAndReviews.name,
             summary: listingsAndReviews.summary,
@@ -28,11 +29,13 @@ export class ListingsService {
             id: listingsAndReviews._id,
             imagePath:listingsAndReviews.imagePath
           }
-        });
+        }), maxListings: placeData.maxListings};
       })))
-      .subscribe(transformedPlaces => {
-        this.listings = transformedPlaces;
-        this.listingsUpdated.next([...this.listings]);
+      .subscribe(transformedPlaceData => {
+        this.listings = transformedPlaceData.listings;
+        this.listingsUpdated.next({listings: [...this.listings],
+           listingCount:transformedPlaceData.maxListings
+          });
       });
   }
 
@@ -70,31 +73,12 @@ export class ListingsService {
     };
     this.http.put("http://localhost:3000/api/listings/"+ id,listingData)
     .subscribe(response => {
-      const updatedListings = [...this.listings];
-      const oldListingIndex = updatedListings.findIndex(l => l.id === id);
-      const listing: Airbnb= {
-        id:id,
-        name:name,
-        summary:summary,
-        location:location,
-        description:description,
-        imagePath:""
-
-      }
-      updatedListings[oldListingIndex] = listing;
-      this.listings = updatedListings;
-      this.listingsUpdated.next([...this.listings]);
       this.router.navigate(['/']);
     });
   }
 
   deleteListing(listingId: string){//grabs the id of what is deleting and passes it to the back end with the http.delete method and subscribes. Refreshes the listing to remove any listings that arent in the db
-    this.http.delete("http://localhost:3000/api/listings/" + listingId)
-    .subscribe(()=>{
-      const updatedlistings = this.listings.filter(listing => listing.id !== listingId);
-      this.listings = updatedlistings;
-      this.listingsUpdated.next([...this.listings]);
-    });
+    return this.http.delete("http://localhost:3000/api/listings/" + listingId);
   }
 
   addListing(name:string, summary:string, location:string, description:string, image:File){
@@ -110,16 +94,6 @@ export class ListingsService {
       )
     .subscribe((responseData)=> {
       //adds the new ID of a newly added listing back to it, allows for deletion of new listings
-      const listing: Airbnb = {
-        id:responseData.listing.id, 
-        name: name, 
-        summary: summary, 
-        location: location, 
-        description:description,
-        imagePath: responseData.listing.imagePath
-      };
-      this.listings.push(listing);
-      this.listingsUpdated.next([...this.listings]);
       this.router.navigate(['/']);
 
     });

@@ -14,6 +14,7 @@ export class StartComponent implements OnInit {
     enteredName = "";
     enteredSummary = "";
     private mode = "add";
+    
     private listingId: string;
     isloading = false;
     listing: Airbnb;
