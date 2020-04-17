@@ -11,10 +11,15 @@ import { Subscription } from 'rxjs';
 export class HeaderComponent implements OnInit, OnDestroy{
     userIsAuthenticated = false;
     private authListenerSubs: Subscription;
+    mobile = false;
     constructor(private authService: Authservice) {
 
     }
     ngOnInit(){
+       
+        if (window.screen.width === 360) { // 768px portrait
+            this.mobile = true;
+        }
         this.userIsAuthenticated = this.authService.getAuthStatus();
         this.authListenerSubs = this.authService
         .getAuthStatusListener()

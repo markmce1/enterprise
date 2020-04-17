@@ -2,23 +2,36 @@
     <span>McE Housing</span>
     <span class="spacer"></span>
     <ul>
-        <li *ngIf="userIsAuthenticated">
+        <li *ngIf="userIsAuthenticated && !mobile">
            <a mat-button routerLink="/add" routerLinkActive="mat-accent">Listing creation</a> 
-        </li>
-        <li>
+        </li >
+        <li *ngIf="!mobile">
             <a mat-button routerLink="/listings" routerLinkActive="mat-accent"  >Listings</a> 
         </li>
-        <li *ngIf="!userIsAuthenticated">
+        <li *ngIf="!userIsAuthenticated && !mobile">
             <a mat-button routerLink="/login" routerLinkActive="mat-accent" >Login</a> 
         </li>
-        <li *ngIf="!userIsAuthenticated">
+        <li *ngIf="!userIsAuthenticated && !mobile">
             <a mat-button routerLink="/signup" routerLinkActive="mat-accent" >Signup</a> 
         </li>
-        <li *ngIf="userIsAuthenticated">
+        <li *ngIf="userIsAuthenticated && !mobile">
             <a mat-button  (click)="onLogout()" >Logout</a> 
         </li>
-        <li *ngIf="userIsAuthenticated">
+        <li *ngIf="userIsAuthenticated && !mobile">
             <a mat-button routerLink="/mylistings" routerLinkActive="mat-accent" >My Listings</a> 
         </li>
     </ul>
+    <mat-menu #appMenu="matMenu">
+            <b mat-menu-item *ngIf="userIsAuthenticated" routerLink="/add">Listing creation</b> 
+             <b mat-menu-item routerLink="/listings"  >Listings</b>
+             <b mat-menu-item *ngIf="!userIsAuthenticated" routerLink="/login"  >Login</b> 
+             <b mat-menu-item *ngIf="!userIsAuthenticated" routerLink="/signup" >Signup</b> 
+             <b mat-menu-item  *ngIf="userIsAuthenticated" (click)="onLogout()" >Logout</b> 
+             <b mat-menu-item  *ngIf="userIsAuthenticated" routerLink="/mylistings"  >My Listings</b> 
+      </mat-menu>
+      
+      <button mat-button *ngIf="mobile" [matMenuTriggerFor]="appMenu">Menu
+      </button>
 </mat-toolbar>
+
+

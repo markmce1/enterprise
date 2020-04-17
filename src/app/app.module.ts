@@ -19,6 +19,7 @@ import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component'
 import { AuthInterceptor } from './auth-interceptor';
 import { MylistingsComponent } from './mylistings/mylistings.component';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { MylistingsComponent } from './mylistings/mylistings.component';
     HttpClientModule,
     MatProgressSpinnerModule,
     MatPaginatorModule,
-    FormsModule
+    FormsModule,
+    MatMenuModule
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}],
   bootstrap: [AppComponent]
