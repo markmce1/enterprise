@@ -1,14 +1,16 @@
-import { Component } from '@angular/core';
-import { Airbnb} from './start.model';
+import { Component, OnInit } from '@angular/core';
+import { Authservice } from './auth.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  storedPosts: Airbnb[] = [];
+export class AppComponent implements OnInit {
 
-  onPostAdded(post) {
-    this.storedPosts.push(post);
+  constructor(private authService: Authservice) {}
+  ngOnInit(){
+    this.authService.autoAuthUser();
   }
+  
+
 }
