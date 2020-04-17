@@ -10,7 +10,7 @@
       <p>Summary of listing: {{ listing.summary }}</p>
       <p>Description of listing: {{ listing.description }}</p>
       <p>Location of listing: {{ listing.location }}</p>
-      <mat-action-row *ngIf="userIsAuthenticated">
+      <mat-action-row *ngIf="userIsAuthenticated && authId == listing.creator">
         <a mat-button color="primary" [routerLink]="['/edit',listing.id]">EDIT</a>
         <button mat-button color="warn" (click)="onDelete(listing.id)">DELETE</button>
       </mat-action-row>

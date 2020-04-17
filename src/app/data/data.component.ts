@@ -21,6 +21,7 @@ export class DataComponent implements OnInit, OnDestroy {
   totalListings = 0;
   listingsPerPage = 5;
   currentPage = 1;
+  authId: string;
   pageSizeOptions = [1,2,5,10];
   private authStatusSub: Subscription;
   userIsAuthenticated = false;
@@ -29,6 +30,7 @@ export class DataComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.isloading = true;
     this.listingsService.getListings(this.listingsPerPage, this.currentPage);
+    this.authId = this.authService.getAuthId();
     this.listingsSub = this.listingsService.getListingUpdateListener()
       .subscribe((listingData: {listings: Airbnb[], listingCount:number}) => {
         this.isloading= false;
@@ -39,6 +41,7 @@ export class DataComponent implements OnInit, OnDestroy {
       this.authStatusSub = this.authService.getAuthStatusListener()
       .subscribe(isAuthenticated=> {
         this.userIsAuthenticated = isAuthenticated;
+        this.authId = this.authService.getAuthId();
       });
   }
 

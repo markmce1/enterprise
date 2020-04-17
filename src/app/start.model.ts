@@ -5,5 +5,6 @@ export interface Airbnb {
     location: string;
     description: string;
     imagePath:string;
+    creator:string;
     //add location and description
 }

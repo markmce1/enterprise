@@ -27,7 +27,8 @@ export class ListingsService {
             location: listingsAndReviews.location,
             description : listingsAndReviews.description,
             id: listingsAndReviews._id,
-            imagePath:listingsAndReviews.imagePath
+            imagePath:listingsAndReviews.imagePath,
+            creator: listingsAndReviews.creator
           }
         }), maxListings: placeData.maxListings};
       })))
@@ -44,7 +45,7 @@ export class ListingsService {
   }
 
   getListing(id: string){
-    return this.http.get<{ _id: string, name:string, summary: string, location: string, description: string, imagePath: string }>
+    return this.http.get<{ _id: string, name:string, summary: string, location: string, description: string, imagePath: string , creator: string}>
     (
       "http://localhost:3000/api/listings/"+ id
     );
@@ -68,7 +69,8 @@ export class ListingsService {
         summary:summary,
         location:location,
         description:description,
-        imagePath:image
+        imagePath:image,
+        creator:null
       } 
     };
     this.http.put("http://localhost:3000/api/listings/"+ id,listingData)

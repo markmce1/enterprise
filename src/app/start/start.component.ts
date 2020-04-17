@@ -50,7 +50,8 @@ export class StartComponent implements OnInit {
             summary: listingData.summary,
             location: listingData.location,
             description: listingData.description,
-            imagePath: listingData.imagePath
+            imagePath: listingData.imagePath,
+            creator:listingData.creator
           }
           this.form.setValue({
             name:this.listing.name, summary: this.listing.summary,

@@ -33,7 +33,8 @@ routing.post("",checkAuth,multer({storage:storage}).single("image"), (req,res,ne
         summary: req.body.summary,
         location: req.body.location,
         description: req.body.description,
-        imagePath: url + "/images/" + req.file.filename
+        imagePath: url + "/images/" + req.file.filename, 
+        creator: req.authData.authId
     });
     listing.save().then(createdListing =>{
         res.status(201).json({
@@ -44,7 +45,8 @@ routing.post("",checkAuth,multer({storage:storage}).single("image"), (req,res,ne
                 summary:createdListing.summary,
                 location:createdListing.location,
                 description:createdListing.description,
-                imagePath:createdListing.imagePath
+                imagePath:createdListing.imagePath,
+                creator: createdListing.creator
             }
         });
     });
@@ -64,11 +66,18 @@ routing.put("/:id",checkAuth,multer({storage:storage}).single("image"),(req,res,
         summary: req.body.summary,
         location: req.body.location,
         description: req.body.description,
-        imagePath:imagePath
-
+        imagePath:imagePath,
+        creator: req.authData.authId
     });
-    listingsAndReview.updateOne({ _id: req.params.id}, listing).then(result => {
-        res.status(200).json({message:'Update successful'})
+    listingsAndReview.updateOne({ _id: req.params.id, creator: req.authData.authId}, listing)
+    .then(result => {
+        if(result.nModified > 0)
+        {
+            res.status(200).json({message:'Update successful'});
+        }
+        else{
+            res.status(401).json({message:'Update unsuccessful'});
+        }
     })
 });
 
@@ -110,8 +119,14 @@ routing.get('/:id',(req,res,next)=>{
 });
 
 routing.delete("/:id",checkAuth,(req,res,next)=>{
-    listingsAndReview.deleteOne({_id: req.params.id}).then(result =>{
-        res.status(200).json({message:"Listing deleted"})
+    listingsAndReview.deleteOne({_id: req.params.id, creator: req.authData.authId}).then(result =>{
+        if(result.n > 0)
+        {
+            res.status(200).json({message:'Delete successful'});
+        }
+        else{
+            res.status(401).json({message:'Delete unsuccessful'});
+        }
     });
 });
 
