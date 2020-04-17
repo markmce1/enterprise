@@ -29,7 +29,7 @@ export class StartComponent implements OnInit {
       name:new FormControl(null,{
         validators:[Validators.required, Validators.minLength(3)]}),
       summary: new FormControl(null,{
-        validators:[Validators.required, Validators.minLength(3), Validators.maxLength(20)]}),
+        validators:[Validators.required, Validators.minLength(3)]}),
       location:new FormControl(null,{
         validators:[Validators.required, Validators.minLength(3)]}),
       description:new FormControl(null,{

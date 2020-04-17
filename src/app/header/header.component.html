@@ -1,21 +1,24 @@
 <mat-toolbar color="primary">
-    <span>McE bnb</span>
+    <span>McE Housing</span>
     <span class="spacer"></span>
     <ul>
         <li *ngIf="userIsAuthenticated">
            <a mat-button routerLink="/add" routerLinkActive="mat-accent">Listing creation</a> 
         </li>
         <li>
-            <a mat-button routerLink="/" >Listings</a> 
+            <a mat-button routerLink="/listings" routerLinkActive="mat-accent"  >Listings</a> 
         </li>
         <li *ngIf="!userIsAuthenticated">
-            <a mat-button routerLink="/login" >Login</a> 
+            <a mat-button routerLink="/login" routerLinkActive="mat-accent" >Login</a> 
         </li>
         <li *ngIf="!userIsAuthenticated">
-            <a mat-button routerLink="/signup" >Signup</a> 
+            <a mat-button routerLink="/signup" routerLinkActive="mat-accent" >Signup</a> 
         </li>
         <li *ngIf="userIsAuthenticated">
             <a mat-button  (click)="onLogout()" >Logout</a> 
+        </li>
+        <li *ngIf="userIsAuthenticated">
+            <a mat-button routerLink="/mylistings" routerLinkActive="mat-accent" >My Listings</a> 
         </li>
     </ul>
 </mat-toolbar>

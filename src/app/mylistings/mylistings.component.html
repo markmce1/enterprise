@@ -1,7 +1,7 @@
 <mat-spinner *ngIf="isloading"></mat-spinner>
-<mat-accordion multi="true" *ngIf="listings.length > 0 && !isloading "> 
-    <mat-expansion-panel *ngFor="let listing of listings" >
-      <mat-expansion-panel-header>
+<mat-accordion multi="true" *ngIf="listings.length > 0 && !isloading"> 
+    <mat-expansion-panel *ngFor="let listing of listings">
+      <mat-expansion-panel-header *ngIf="authId == listing.creator">
        <p>Name of listing: {{ listing.name }}</p>
       </mat-expansion-panel-header>
       <div class="listing-image">
@@ -16,6 +16,5 @@
       </mat-action-row>
     </mat-expansion-panel>
   </mat-accordion>
-  <mat-paginator [length]="totalListings" [pageSize]="listingsPerPage" [pageSizeOptions]="pageSizeOptions" (page)="onChangedPage($event)" *ngIf="listings.length > 0 && listings.length > 0"></mat-paginator>
-  <p class="info-text mat-body-1" *ngIf="listings.length <= 0 && isloading">No listings added yet!</p>
+ <p class="info-text mat-body-1" *ngIf="listings.length <= 0 && isloading">No listings added yet!</p>
    
