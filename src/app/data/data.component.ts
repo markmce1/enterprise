@@ -4,6 +4,7 @@ import { Airbnb } from '../start.model';
 
 import { Subscription } from 'rxjs';
 import { PageEvent } from '@angular/material/paginator';
+import { Authservice } from '../auth.service';
 
 
 @Component({
@@ -21,8 +22,10 @@ export class DataComponent implements OnInit, OnDestroy {
   listingsPerPage = 5;
   currentPage = 1;
   pageSizeOptions = [1,2,5,10];
+  private authStatusSub: Subscription;
+  userIsAuthenticated = false;
   
-  constructor(private listingsService: ListingsService) { }
+  constructor(private listingsService: ListingsService, private authService:Authservice) { }
   ngOnInit() {
     this.isloading = true;
     this.listingsService.getListings(this.listingsPerPage, this.currentPage);
@@ -31,6 +34,11 @@ export class DataComponent implements OnInit, OnDestroy {
         this.isloading= false;
         this.totalListings = listingData.listingCount
         this.listings = listingData.listings;
+      });
+      this.userIsAuthenticated = this.authService.getAuthStatus();
+      this.authStatusSub = this.authService.getAuthStatusListener()
+      .subscribe(isAuthenticated=> {
+        this.userIsAuthenticated = isAuthenticated;
       });
   }
 
@@ -52,6 +60,7 @@ export class DataComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.listingsSub.unsubscribe();
+    this.authStatusSub.unsubscribe();
   }
 
 }

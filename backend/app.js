@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const path = require("path");
 
 const listingRoutes = require("./routes/listings");
-
+const authRoutes = require("./routes/auth");
 
 mongoose.connect("mongodb+srv://markmce:rMfZLJHQBCMCE0RT@enterpriseproject-ab1wl.mongodb.net/sample_airbnb?retryWrites=true&w=majority")
     .then(() => 
@@ -22,13 +22,13 @@ app.use((req,res,next)=> {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader(
      'Access-Control-Allow-Headers',
-     'Origin, X-Request-With, Content-Type, Accept');
+     'Origin, X-Request-With, Content-Type, Accept, authorization ');
      res.setHeader(
      'Access-Control-Allow-Methods', 
      'GET, POST, PATCH, PUT, DELETE, OPTIONS');
     next();
 });
-
+app.use("/api/auth", authRoutes);
 app.use("/api/listings", listingRoutes);
 
 module.exports = app;

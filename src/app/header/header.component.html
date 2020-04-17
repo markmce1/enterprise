@@ -2,17 +2,20 @@
     <span>McE bnb</span>
     <span class="spacer"></span>
     <ul>
-        <li>
+        <li *ngIf="userIsAuthenticated">
            <a mat-button routerLink="/add" routerLinkActive="mat-accent">Listing creation</a> 
         </li>
         <li>
             <a mat-button routerLink="/" >Listings</a> 
         </li>
-        <li>
+        <li *ngIf="!userIsAuthenticated">
             <a mat-button routerLink="/login" >Login</a> 
         </li>
-        <li>
+        <li *ngIf="!userIsAuthenticated">
             <a mat-button routerLink="/signup" >Signup</a> 
+        </li>
+        <li *ngIf="userIsAuthenticated">
+            <a mat-button  >Logout</a> 
         </li>
     </ul>
 </mat-toolbar>

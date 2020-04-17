@@ -2,6 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const routing = express.Router();
 const listingsAndReview= require('../models/listings');
+const checkAuth = require("../middleware/check-auth");
 
 const  MIME_TYPE_MAP = {
     'image/png': 'png',
@@ -25,7 +26,7 @@ const storage = multer.diskStorage({
     }
 });
 
-routing.post("",multer({storage:storage}).single("image"), (req,res,next) => {
+routing.post("",checkAuth,multer({storage:storage}).single("image"), (req,res,next) => {
     const url = req.protocol + '://' + req.get("host");
     const listing = new listingsAndReview({
         name: req.body.name,
@@ -50,7 +51,7 @@ routing.post("",multer({storage:storage}).single("image"), (req,res,next) => {
 
 });
 
-routing.put("/:id",multer({storage:storage}).single("image"),(req,res,next) =>{
+routing.put("/:id",checkAuth,multer({storage:storage}).single("image"),(req,res,next) =>{
     let imagePath = req.body.imagePath;
     if(req.file){
         const url = req.protocol + '://' + req.get("host");
@@ -105,13 +106,10 @@ routing.get('/:id',(req,res,next)=>{
         }else{
             res.status(404).json({message: 'Listing not found!'})
         }
-
     });
-
-
 });
 
-routing.delete("/:id",(req,res,next)=>{
+routing.delete("/:id",checkAuth,(req,res,next)=>{
     listingsAndReview.deleteOne({_id: req.params.id}).then(result =>{
         res.status(200).json({message:"Listing deleted"})
     });
