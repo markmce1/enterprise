@@ -18,22 +18,18 @@ export class MylistingsComponent implements OnInit {
   private listingsSub: Subscription;
   isloading = false;
   totalListings = 0;
-  listingsPerPage = 5;
-  currentPage = 1;
   authId: string;
-  pageSizeOptions = [1,2,5,10];
   private authStatusSub: Subscription;
   userIsAuthenticated = false;
   
   constructor(private listingsService: ListingsService, private authService:Authservice) { }
   ngOnInit() {
     this.isloading = true;
-    this.listingsService.getListings(this.listingsPerPage, this.currentPage);
+    this.listingsService.getListings(null,null);
     this.authId = this.authService.getAuthId();
     this.listingsSub = this.listingsService.getListingUpdateListener()
       .subscribe((listingData: {listings: Airbnb[], listingCount:number}) => {
         this.isloading= false;
-        this.totalListings = listingData.listingCount
         this.listings = listingData.listings;
       });
       this.userIsAuthenticated = this.authService.getAuthStatus();
@@ -47,16 +43,14 @@ export class MylistingsComponent implements OnInit {
   onChangedPage(pageData:PageEvent)
   {
     this.isloading = true;
-    this.currentPage = pageData.pageIndex + 1;
-    this.listingsPerPage = pageData.pageSize;
-    this.listingsService.getListings(this.listingsPerPage, this.currentPage);
+    this.listingsService.getListings(null,null);
   }
 
   onDelete(listingId: string)
   {
     this.isloading = true;
     this.listingsService.deleteListing(listingId).subscribe(() => {
-      this.listingsService.getListings(this.listingsPerPage, this.currentPage);
+      this.listingsService.getListings(null,null);
     });
   }
 
